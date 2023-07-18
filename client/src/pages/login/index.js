@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link'
 
-const SignupSchema = Yup.object().shape({
+const loginSchema = Yup.object().shape({
   fullName: Yup.string()
     .required('Required'),
   Number: Yup.number()
@@ -17,16 +17,16 @@ const SignupSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
 });
 
-export const Register = () => (
-  <div className='Register'>
-    <h1>Signup</h1>
+export const Login = () => (
+  <div className='Login'>
+    <h1>Login</h1>
     <Formik
       initialValues={{
         firstName: '',
         lastName: '',
         email: '',
       }}
-      validationSchema={SignupSchema}
+      validationSchema={loginSchema}
       onSubmit={values => {
         // same shape as initial values
         console.log(values);
@@ -51,8 +51,8 @@ export const Register = () => (
       )}
     </Formik>
 
-    Already have an account?  <Link href="/login">Login</Link> instead
+    Don't have an account?   <Link href="/register">Register </Link>instead
   </div>
 );
 
-export default Register
+export default Login

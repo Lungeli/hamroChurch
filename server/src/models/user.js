@@ -5,6 +5,7 @@ const userSchema = new Schema({
     fullName: String, // String is shorthand for {type: String}
     address: String,
     password: String,
+    email: String,
     number: Number,
     image: String,
     dob: String, 
