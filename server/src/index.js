@@ -4,18 +4,24 @@ const connection = require('./db/connection')
 const Users = require('./models/user')
 connection()
 const app = express()
+
+
+const cors = require('cors')
 const port = 4000
 app.use(express.json())
+app.use(cors())
  
 app.post('/register', async (req, res) => {
     await Users.create(req.body)
     res.json({
-    msg: "user"
+    msg: "user Registered"
     })
 })
  
 app.get('/products', async(req, res) => {
- const data = await Products.find()
+ res.json({
+    msg: "Hello from Backend    "
+ })
 })
  
 app.put('/products/:id', async(req, res) => {
@@ -26,9 +32,6 @@ app.put('/products/:id', async(req, res) => {
  await Products.findByIdAndDelete(req.params.id)
  })
  
- app.get('/products', async(req, res) => { 
- const data = await Products.find()
-})
  
  app.listen(port, () => {
  console.log(`Example app listening on port ${port}`)

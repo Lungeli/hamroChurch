@@ -6,7 +6,7 @@ const userSchema = new Schema({
     address: String,
     password: String,
     email: String,
-    number: Number,
+    phoneNumber: Number,
     image: String,
     dob: String, 
     role: String,
