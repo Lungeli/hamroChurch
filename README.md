@@ -1,14 +1,13 @@
 ### Features
-    - [ ] Dashboard
-    - [ ]Member Details
-    - [ ] Event Planning (Calender)
-    - [ ]Roles and Groups
-    - [ ]Donations Tracking and Report
+  - [ ] Dashboard
+  - [ ] Member Details
+  - [ ] Event Planning
+  - [ ] Roles and Groups
+  - [ ] Donation Tracking and Report
 
 ### First Phase
-    [ ] Login
-    - [ ] Rider
-    - [ ] User
+ [ ] Login
+   - [ ] User
 - [ ] Register
-   - [ ] Rider
+   - [ ] Admin
    - [ ] User
