@@ -130,7 +130,3 @@ button[type="submit"]:hover{
 .app--login input + div{
   color:red;
 }
-.formcontainer {
-  text-align: left;
-  margin: 24px 50px 12px;
-  }

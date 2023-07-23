@@ -11,7 +11,7 @@ export default function index() {
               <p></p>
                 <div className='btn'>
                   
-                  <a href='/login' >Get Started</a>
+                  <a href='/register' >Get Started</a>
                 </div>
             </div>
           </div>
