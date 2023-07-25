@@ -42,7 +42,10 @@ const Register = () => {
       const data = await res.json()
       if(data) {
         messageApi.info(data.msg);
-        router.push('/login')
+        if(data.success==true){
+          router.push('/login')
+        }
+       
       }
       }
     return(
@@ -73,12 +76,13 @@ const Register = () => {
              ) : null}
              <Field name="email" type="email" placeholder="Email"/>
              {errors.email && touched.email ? <div>{errors.email}</div> : null}
+             <Field name="phoneNumber" type="text"  placeholder="Phone Number"/>
+             {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
+         
              <Field name="password" type="password" placeholder="Password"/>
              {errors.password && touched.password ? <div>{errors.password}</div> : null}
              <Field name="confirmPassword" type="password" placeholder="Confirm Password"/>
              {errors.confirmPassword && touched.confirmPassword ? <div>{errors.confirmPassword}</div> : null}
-             <Field name="phoneNumber" type="text"  placeholder="Phone Number"/>
-             {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
              <button type="submit">Signup</button>
            </Form>
          )}

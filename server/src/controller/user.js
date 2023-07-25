@@ -1,27 +1,31 @@
 const Users = require('../models/user')
+const bcrypt = require('bcryptjs');
 
+const saltRounds = 10;
 
-const checkIfUserExists = async(req, res) => {
-    const data= await Users.findOne({phoneNumber:req.params.phoneNumber })
-    if(data) {
-      res.json({
-        msg: "Phone Number already exists",
-        validPhoneNo: false
-      })
-    }else{
-      res.json({
-        validPhoneNo: true
-      })
-    }
-    }
+const registerUser=  async(req, res) => {
+  try{
+      //check if user already exists
+      const data= await Users.findOne({phoneNumber:req.body.phoneNumber })
+      if(data){
+          res.status(409).json({
+              msg: "Phone Number already exists",
+              success: false
+          })
+      }else{
+              //create a hash password of req.body.password
+              req.body.password = await bcrypt.hash(req.body.password, saltRounds)
+              await Users.create(req.body)
+              res.json({
+                  msg: "User successfully registered",
+                  success: true
+              })
+      }
+    
+  }catch(err){
+      console.log(err)
+  }
 
-const registerUser = async (req, res) => {
-    await Users.create(req.body)
-    res.json({
-    msg: "You are Sucessfully Registered",
-    success: true
-    })
 }
 
-
-module.exports = {checkIfUserExists, registerUser}
+module.exports = {registerUser}
