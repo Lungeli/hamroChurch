@@ -1,5 +1,6 @@
 const express = require('express')
 require('dotenv').config()
+const userRoute=require('./routes/user')
 const connection = require('./db/connection')
 const Users = require('./models/user')
 connection()
@@ -10,19 +11,8 @@ const cors = require('cors')
 const port = 4000
 app.use(express.json())
 app.use(cors())
+app.use("/",userRoute)
  
-app.post('/register', async (req, res) => {
-    await Users.create(req.body)
-    res.json({
-    msg: "user Registered"
-    })
-})
- 
-app.get('/products', async(req, res) => {
- res.json({
-    msg: "Hello from Backend    "
- })
-})
  
 app.put('/products/:id', async(req, res) => {
  await Products.findByIdAndUpdate(req.params.id, req.body)

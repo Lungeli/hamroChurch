@@ -1,58 +1,47 @@
-import React from 'react';
+import React from 'react'
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Link from 'next/link'
+import Header from '../../components/Header'
+import Footer from '../../components/Footer'
+const Login = () => {
+    const LoginSchema = Yup.object().shape({
+      email: Yup.string().email('Invalid email').required('Required'),
+      password: Yup.string().required('Required')
+    });
+    return(
+        <>
+        <Header/>
+      <div className='container'> 
+      <div className="app--login">
+        <h2>Please Login</h2>
+        <Formik
+         initialValues={{
+            phoneNumber: '',
+           password:''
+         }}
+         validationSchema={LoginSchema}
+         onSubmit={values => {
+           // same shape as initial values
+           console.log(values);
+         }}
+       >
+         {({ errors, touched }) => (
+           <Form>
+            <Field name="phoneNumber"  placeholder="Phone Number"/>
+             {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
+             <Field name="password" type="password" placeholder="Password"/>
+             {errors.password && touched.password ? <div>{errors.password}</div> : null}
+             <button type="submit">Login</button>
+           </Form>
+         )}
+       </Formik>
+        <p>Don't have an account? <Link href="/register">Sign up</Link></p>
+      </div>
+      </div>
+      <Footer/>
+      </>
+    )
+  }
 
-const loginSchema = Yup.object().shape({
-  fullName: Yup.string()
-    .required('Required'),
-  Number: Yup.number()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  password: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-});
-
-export const Login = () => (
-  <div className='Login'>
-    <h1>Login</h1>
-    <Formik
-      initialValues={{
-        firstName: '',
-        lastName: '',
-        email: '',
-      }}
-      validationSchema={loginSchema}
-      onSubmit={values => {
-        // same shape as initial values
-        console.log(values);
-      }}
-    >
-      {({ errors, touched }) => (
-        <Form>
-          First Name: <Field name="FullName" />
-          {errors.firstName && touched.firstName ? (
-            <div>{errors.firstName}</div>
-          ) : null} <br/>
-          Number:<Field name="number" />
-          {errors.lastName && touched.lastName ? (
-            <div>{errors.lastName}</div>
-          ) : null} <br/>
-         Email:  <Field name="email" type="email" />
-          {errors.email && touched.email ? <div>{errors.email}</div> : null} <br/>
-          Password:  <Field name="password" type="password" />
-          {errors.password && touched.password ? <div>{errors.password}</div> : null} <br/>
-          <button type="submit">Submit</button>
-        </Form>
-      )}
-    </Formik>
-
-    Don't have an account?   <Link href="/register">Register </Link>instead
-  </div>
-);
-
-export default Login
+export default Login;

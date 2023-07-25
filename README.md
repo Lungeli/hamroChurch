@@ -6,7 +6,7 @@
   - [ ] Donation Tracking and Report
 
 ### First Phase
- [ ] Login
+ - [ ] Login
    - [ ] User
 - [ ] Register
    - [ ] Admin
