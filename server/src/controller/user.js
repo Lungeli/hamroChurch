@@ -1,5 +1,6 @@
 const Users = require('../models/user')
 const bcrypt = require('bcryptjs');
+var jwt = require('jsonwebtoken');
 
 const saltRounds = 10;
 
@@ -15,11 +16,18 @@ const registerUser=  async(req, res) => {
       }else{
               //create a hash password of req.body.password
               req.body.password = await bcrypt.hash(req.body.password, saltRounds)
-              await Users.create(req.body)
-              res.json({
-                  msg: "User successfully registered",
-                  success: true
-              })
+              const token = jwt.sign({ phoneNumber:req.body.phoneNumber}, process.env.SECRET_KEY);
+              const data = await Users.create(req.body)
+              if(data){
+                const {password, ...otherFields} = data._doc
+                res.json({
+                    msg: "User successfully registered",
+                    success: true,
+                    token,
+                    userDetails: otherFields
+                })
+              }
+            
       }
     
   }catch(err){

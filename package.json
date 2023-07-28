@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "antd": "^5.7.2"
+    "antd": "^5.7.2",
+    "jsonwebtoken": "^9.0.1"
   }
 }
