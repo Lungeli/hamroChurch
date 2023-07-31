@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { combineReducers } from 'redux'
 import users from '../reducerSlice/users'
+import logger from 'redux-logger'
 
 
 const reducer = combineReducers({
@@ -9,6 +10,7 @@ const reducer = combineReducers({
         })
 const store = configureStore({
 reducer,
+middleware: [logger]
 })
 
 

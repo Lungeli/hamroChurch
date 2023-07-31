@@ -15,6 +15,7 @@ header{
   /* position: fixed; */
   top: 0;
   width: 100%
+  
 }
 nav{
   display: flex;
@@ -27,6 +28,7 @@ nav{
 .logo img{
   max-width: 150px;
   height: 100px;
+  margin-left: 1px;
 }
 ul.nav-menus{
   display: flex;
