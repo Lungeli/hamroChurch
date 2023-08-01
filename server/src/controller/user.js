@@ -26,8 +26,7 @@ const registerUser=  async(req, res) => {
                     token,
                     userDetails: otherFields
                 })
-              }
-            
+              }         
       }
     
   }catch(err){
@@ -36,4 +35,35 @@ const registerUser=  async(req, res) => {
 
 }
 
-module.exports = {registerUser}
+const login = async(req, res) => {
+    try{
+        const data = await Users.findOne({phoneNumber: req.body.phoneNumber}) 
+        if(data){
+          const isMatched = await bcrypt.compare(req.body.password, data.password)
+          if(isMatched){
+              const token = jwt.sign({ phoneNumber:req.body.phoneNumber}, process.env.SECRET_KEY);
+              res.json({
+                  token:token,
+                  success: true,
+                  userDetails: data
+              })
+          }else{
+              res.json({
+                  success: false,
+                  msg: "Incorrect Password"
+              })
+          }
+        }else{
+          res.json({
+              success: false,
+              msg: "Phone Number doesn't exist"
+          })
+        }
+      }catch(err){
+          console.log(err)
+      }
+
+}
+
+
+module.exports = {registerUser, login}

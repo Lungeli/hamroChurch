@@ -33,7 +33,7 @@ const Profile = () => {
         marginTop: 16,
       }}
       type="inner"
-      title="Settings"
+      title="Account Settings"
       extra={<a href="#">More</a>}
     >
      <span onClick={()=>setIsModalOpen(true)}> Change Password </span>  <br/>
