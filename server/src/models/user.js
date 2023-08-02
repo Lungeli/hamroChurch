@@ -10,6 +10,7 @@ const userSchema = new Schema({
     image: String,
     dob: String, 
     role: String,
+    gender: String,
     mode: {type: String, default:'User'}
    });
     

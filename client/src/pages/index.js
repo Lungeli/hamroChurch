@@ -4,17 +4,24 @@ import Footer from '../components/Footer'
 import { useSelector } from 'react-redux'
 export default function index() {
 
-  const {fullName} = useSelector(state=>state.users) 
+  const {isLoggedIn, userDetails} = useSelector(state=>state.users)
   return (
     <>
         <section className='hero' style={{backgroundImage: `url(${Heroimg.src})`}}>
-          
+        
             <div className='request--box'> 
               <p></p>
+              {isLoggedIn ? (
                 <div className='btn'>
                   
-                  <a href='/login' >Get Started</a>
+                  <a href='/dashboard' >Get Started</a>
                 </div>
+              ) : (
+                <div className='btn'>
+                  
+                <a href='/login' >Get Started</a>
+              </div>
+              )}
             </div>
           
         </section>
