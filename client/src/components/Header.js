@@ -1,15 +1,23 @@
 import Image from 'next/image'
 import Logo from '../../public/hamroChurchLogo.png'
 import { Avatar, Space, Button, Popover } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
+import { handleLogOut } from '@/redux/reducerSlice/users';
+import { useRouter } from 'next/router';
 
 export default function Header() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const userLogOut = () =>{
+    dispatch(handleLogOut())
+    router.push('/login')
+  }
   const {isLoggedIn, userDetails} = useSelector(state=>state.users)
   const content = (
     <div>
       <Link href='/profile'> Profile </Link>
-      <p>Log Out</p>
+      <p onClick={userLogOut}>Log Out</p>
     </div>
   );
 

@@ -64,6 +64,10 @@ const login = async(req, res) => {
       }
 
 }
+const changePassword = async(req, res) => {
+    console.log(req.body, req.params.id)
+
+}
 
 
-module.exports = {registerUser, login}
+module.exports = {registerUser, login, changePassword}
