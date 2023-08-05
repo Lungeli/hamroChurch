@@ -68,6 +68,22 @@ const changePassword = async(req, res) => {
     console.log(req.body, req.params.id)
 
 }
+const changeUserDetails = async (req, res) => {
+    try {
+        //to check the current details of user
+        await Users.findByIdAndUpdate(req.params.id,{ $set: req.body })
+        const data = await Users.findById(req.params.id)
+        if (data) {
+            res.json({
+                msg: "Details changed successfully",
+                success: true,
+                userDetails: data
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
-module.exports = {registerUser, login, changePassword}
+module.exports = {registerUser, login, changePassword, changeUserDetails}
