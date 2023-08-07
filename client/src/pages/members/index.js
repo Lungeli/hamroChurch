@@ -9,28 +9,25 @@ import { setUserDetails } from '@/redux/reducerSlice/users';
 import { useDispatch } from 'react-redux';
 
 
-const Register = () => {
+const Members = () => {
+ 
 
   const [messageApi, contextHolder] = message.useMessage();
 
-
-
-    const SignupSchema = Yup.object().shape({
-
-      
-      fullName: Yup.string()
-          .min(2, 'Too Short!')
-          .max(50, 'Too Long!')
-          .required('Required'),
-        password: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required'),
-        confirmPassword: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required')
-        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-        email: Yup.string().email('Invalid email'),
-      });
+    // const addMemberSchema = Yup.object().shape({
+    //   fullName: Yup.string()
+    //       .min(2, 'Too Short!')
+    //       .max(50, 'Too Long!')
+    //       .required('Required'),
+    //     password: Yup.string()
+    //     .min(5, 'Password Too Short!')
+    //     .required('Required'),
+    //     confirmPassword: Yup.string()
+    //     .min(5, 'Password Too Short!')
+    //     .required('Required')
+    //     .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    //     email: Yup.string().email('Invalid email'),
+    //   });
 
       
       const handleAddMember = async(values) => {
@@ -67,7 +64,7 @@ const Register = () => {
             dob: '',
             maritalStatus: ''
          }}
-         validationSchema={SignupSchema}
+        //  validationSchema={addMemberSchema}
          onSubmit={values => {
           handleAddMember(values)
          }}
@@ -103,4 +100,5 @@ const Register = () => {
     )
   }
 
-export default Register;
+
+export default Members
