@@ -11,8 +11,9 @@ const Dashboard = () => {
       <>
         <Header/>
         <div>Welcome To Dashboard {userDetails.fullName}</div>
-          </>
-    
+          
+    <Footer/>
+    </>
     )
   }
 
