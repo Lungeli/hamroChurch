@@ -1,8 +1,10 @@
 const express = require('express')
 require('dotenv').config()
 const userRoute=require('./routes/user')
+const memberRoute=require('./routes/member')
 const connection = require('./db/connection')
 const Users = require('./models/user')
+const Member = require('./models/member')
 connection()
 const app = express()
 
@@ -12,6 +14,7 @@ const port = 4000
 app.use(express.json())
 app.use(cors())
 app.use("/",userRoute)
+app.use("/",memberRoute)
  
 
  
