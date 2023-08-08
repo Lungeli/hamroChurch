@@ -15,20 +15,13 @@ const Register = () => {
 
 
 
-    const SignupSchema = Yup.object().shape({
+    const memberSchema = Yup.object().shape({
 
       
       fullName: Yup.string()
           .min(2, 'Too Short!')
           .max(50, 'Too Long!')
           .required('Required'),
-        password: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required'),
-        confirmPassword: Yup.string()
-        .min(5, 'Password Too Short!')
-        .required('Required')
-        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
         email: Yup.string().email('Invalid email'),
       });
 
@@ -67,7 +60,7 @@ const Register = () => {
             dob: '',
             maritalStatus: ''
          }}
-         validationSchema={SignupSchema}
+         validationSchema={memberSchema}
          onSubmit={values => {
           handleAddMember(values)
          }}
