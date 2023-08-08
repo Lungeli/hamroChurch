@@ -8,6 +8,9 @@ const userSchema = new Schema({
     email: String,
     phoneNumber: Number,
     image: String,
+    dob: String, 
+    role: String,
+    gender: String,
     mode: {type: String, default:'User'}
    });
     
