@@ -11,16 +11,17 @@ const addNewMember=  async(req, res) => {
 
 }
   
-const getAllProducts = async(req,res)=>{
-    const data =  await Products.find()
-    if(data){
-     res.json({
-       data,
-       msg: 'success'
-     })
-    }  
- 
-   }
+const getAllMembers = async (req, res) => {
+  const data = await Members.find().limit(req.query.size).skip((req.query.page - 1)* req.query.size )
+  const count = await Members.find().count()
+  if(data){
+      res.json({
+          memberList: data,
+          count:count
+      })
+  }
+      
+  }
 
 
-module.exports = {addNewMember, getAllProducts}
+module.exports = {addNewMember, getAllMembers}

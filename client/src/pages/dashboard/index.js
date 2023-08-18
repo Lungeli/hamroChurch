@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/navigation';
+import { Button, Col, Row, Statistic } from 'antd';
 
 
 import Header from '../../components/Header';
@@ -18,8 +19,16 @@ const Dashboard = () => {
       <>
         <Header/>
         <div>Welcome To Dashboard {userDetails.fullName}</div>
-        <div> <button onClick={handleMember}>Add Member</button></div>
+        <div style={{margin:'10px' ,backgroundColor:'lightgrey', padding:'5px', width:'200px'}}>
+        <Row gutter={16} >
+          <Col span={12}>
+      <Statistic title="Active Users" value={112893} />
+        </Col>
+        </Row>
+        </div>
 
+        <div><br/> <br/> <button onClick={handleMember}>Add Member</button></div>
+     
           </>
     
     )
