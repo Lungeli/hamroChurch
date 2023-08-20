@@ -29,6 +29,9 @@ useEffect(()=>{
   const viewMember= () => {
     router.push('/members/view-member')
   }
+  const handleDonation= () => {
+    router.push('/donation')
+  }
     return(
       <>
         <Header/>
@@ -43,6 +46,7 @@ useEffect(()=>{
 
         <div><br/> <br/> <button onClick={handleMember}>Add Member</button>
         <button onClick={viewMember}>View All Member</button>
+        <button onClick={handleDonation}>Add Donation</button>
         </div>
      
           </>
