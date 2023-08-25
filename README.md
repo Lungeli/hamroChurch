@@ -1,5 +1,5 @@
 ### Features
-  - [ ] Dashboard
+  - [.] Dashboard
   - [ ] Member Details
   - [ ] Event Planning
   - [ ] Roles and Groups
