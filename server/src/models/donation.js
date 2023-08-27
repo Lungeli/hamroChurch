@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const donationSchema = new Schema({
-    totalDonation: Number,
+    donationAmount: Number,
     donationDate: String,
     user: String
    });

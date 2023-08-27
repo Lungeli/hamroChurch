@@ -19,8 +19,8 @@ const Donation = () => {
       
       // donationDate: Yup.date()
       //     .required('Please select the date'),
-        totalDonation: Yup.number()
-        .required('Please enter donation number'),
+      donationAmount: Yup.number()
+        .required('Please enter donation amount'),
       });
     
     const onChange = (date) => {
@@ -55,7 +55,7 @@ const Donation = () => {
    
     <Formik
          initialValues={{
-            totalDonation: '',
+          donationAmount: '',
             donationDate:'',
             user: userDetails.fullName,
          }}
@@ -80,9 +80,9 @@ const Donation = () => {
                <div>{errors.donationDate}</div>
              ) : null}
             <h2>Total Donation in Rs:</h2>
-             <Field name="totalDonation" placeholder="Total Donation"/>
-             {errors.totalDonation && touched.totalDonation ? (
-               <div>{errors.totalDonation}</div>
+             <Field name="donationAmount" placeholder="Total Donation"/>
+             {errors.donationAmount && touched.donationAmount ? (
+               <div>{errors.donationAmount}</div>
              ) : null}
              <button type="submit">Add Data </button>
            </Form>
