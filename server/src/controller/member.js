@@ -24,4 +24,23 @@ const getAllMembers = async (req, res) => {
   }
 
 
-module.exports = {addNewMember, getAllMembers}
+const countMale = async(req, res) => {
+    try {
+        const maleCount = await Members.countDocuments({ gender: 'Male' });
+        res.json({ maleCount });
+      } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+}
+const countFemale = async(req, res) => {
+    try {
+        const femaleCount = await Members.countDocuments({ gender: 'Female' });
+        res.json({ femaleCount });
+      } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+      }
+}
+
+
+
+module.exports = {addNewMember, getAllMembers, countMale, countFemale}
