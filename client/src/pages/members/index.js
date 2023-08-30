@@ -1,32 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useRouter } from 'next/navigation'
-import { Button, message } from 'antd';
-import { setUserDetails } from '@/redux/reducerSlice/users';
-import { useDispatch } from 'react-redux';
+import { Button, message, Result } from 'antd';
+
 
 
 const Register = () => {
+  const router = useRouter()
 
   const [messageApi, contextHolder] = message.useMessage();
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMsg, setSuccessMsg] = useState(false);
 
+  const goToDashboard=()=>{
+    router.push('/dashboard')
+  }
+  const addmembersAgain=()=>{
+    window.location.reload();
+  }
 
 
     const memberSchema = Yup.object().shape({
-
-      
-      fullName: Yup.string()
+        fullName: Yup.string()
           .min(2, 'Too Short!')
           .max(50, 'Too Long!')
           .required('Required'),
         email: Yup.string().email('Invalid email'),
       });
-
       
-      const handleAddMember = async(values) => {
+    const handleAddMember = async(values) => {
         console.log(values)
         const {confirmPassword, ...formFields }= values
         const requestOptions = {
@@ -37,17 +42,30 @@ const Register = () => {
       const res = await fetch('http://localhost:4000/member',requestOptions)
       const data = await res.json()
       if(data) { 
-          messageApi.info(data.msg)
+        setShowSuccess(true);
+        setSuccessMsg(data.msg)
       }else{
         messageApi.info(res.statusText);
       }
       }
     return(
-        <>
-        {contextHolder}
-        <Header/>
-      <div className='container'> 
-      <div className="app--login">
+      <>
+      {contextHolder}
+      {showSuccess ? (
+     <Result
+     status="success"
+     title={successMsg}
+     extra={[
+       <Button type="primary" key="console" onClick={goToDashboard}>
+         Go To Dashboard
+       </Button>,
+       <Button key="buy" onClick={addmembersAgain}>Add New Member</Button>,
+     ]}
+   />
+      ) : (
+        <React.Fragment>
+        <div className="container">
+        <div className="app--login">
         <h2>Add a Member</h2>
         <Formik
          initialValues={{
@@ -89,11 +107,11 @@ const Register = () => {
       </div>
       <Footer/>
       <div>
-      
-
-      </div>
-      </>
-    )
-  }
+        </div>
+        </React.Fragment>
+      )}
+    </>
+  );
+};
 
 export default Register;
