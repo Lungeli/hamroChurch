@@ -4,7 +4,9 @@ import * as Yup from 'yup';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useRouter } from 'next/navigation'
-import { Button, message, Result } from 'antd';
+import { Button, message, Result, Radio, Dropdown, Menu } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import Head from "next/head";
 
 
 
@@ -28,7 +30,12 @@ const Register = () => {
           .min(2, 'Too Short!')
           .max(50, 'Too Long!')
           .required('Required'),
+        gender: Yup.string()
+          .required('Required'),
         email: Yup.string().email('Invalid email'),
+        phoneNumber: Yup.string()
+        .required('Phone Number Required'),
+
       });
       
     const handleAddMember = async(values) => {
@@ -64,6 +71,7 @@ const Register = () => {
    />
       ) : (
         <React.Fragment>
+            <Header/>
         <div className="container">
         <div className="app--login">
         <h2>Add a Member</h2>
@@ -83,7 +91,7 @@ const Register = () => {
           handleAddMember(values)
          }}
        >
-         {({ errors, touched }) => (
+         {({ values, errors, touched, setFieldValue }) => (
            <Form>
              <Field name="fullName" placeholder="Full Name"/>
              {errors.fullName && touched.fullName ? (
@@ -95,10 +103,36 @@ const Register = () => {
              {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
          
              <Field name="address" type="text" placeholder="Address"/>
-             <Field name="gender" type="text" placeholder="Gender"/>
+             
              <Field name="dob" type="text" placeholder="Date of Birth (String Format)"/>
              <Field name="image" type="text" placeholder="Image Link"/>
-             <Field name="maritalStatus" type="text" placeholder="Marital Status (Single/Married"/>
+             <Dropdown
+        overlay={
+          <Menu onClick={(e) => setFieldValue('maritalStatus', e.key)}>
+            <Menu.Item key="Single">Single</Menu.Item>
+            <Menu.Item key="Married">Married</Menu.Item>
+          </Menu>
+        }
+        placement="bottomLeft"
+      >
+        <Button>
+          {values.maritalStatus || 'Select Marital Status'} <DownOutlined />
+        </Button>
+      </Dropdown>
+             
+                <br/>
+                <br/>
+                Gender:
+             <Radio.Group
+            name="gender"
+             value={values.gender}
+              onChange={(e) => setFieldValue('gender', e.target.value)}
+      >
+                  <Radio value="Male">Male</Radio>
+                  <Radio value="Female">Female</Radio>
+                </Radio.Group>
+                
+      <br/>
              <button type="submit">Add </button>
            </Form>
          )}
