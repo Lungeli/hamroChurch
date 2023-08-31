@@ -29,13 +29,18 @@ const Register = () => {
         fullName: Yup.string()
           .min(2, 'Too Short!')
           .max(50, 'Too Long!')
-          .required('Required'),
+          .required('User Name is required'),
         gender: Yup.string()
-          .required('Required'),
+          .required('Gender of user Required'),
         email: Yup.string().email('Invalid email'),
         phoneNumber: Yup.string()
         .required('Phone Number Required'),
-
+        maritalStatus: Yup.string()
+          .required('Marital Status Required'),
+          address: Yup.string()
+          .required('Address cannot be blank'),
+          dob: Yup.string()
+          .required('D.O.B cannot be blank'),
       });
       
     const handleAddMember = async(values) => {
@@ -48,11 +53,11 @@ const Register = () => {
       };
       const res = await fetch('http://localhost:4000/member',requestOptions)
       const data = await res.json()
-      if(data) { 
+      if(data.success==true) { 
         setShowSuccess(true);
         setSuccessMsg(data.msg)
       }else{
-        messageApi.info(res.statusText);
+        messageApi.info(data.msg);
       }
       }
     return(
@@ -100,11 +105,19 @@ const Register = () => {
              <Field name="email" type="email" placeholder="Email"/>
              {errors.email && touched.email ? <div>{errors.email}</div> : null}
              <Field name="phoneNumber" type="text"  placeholder="Phone Number"/>
-             {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
+             {errors.phoneNumber && touched.phoneNumber ? (
+               <div>{errors.phoneNumber}</div>
+             ) : null}
          
              <Field name="address" type="text" placeholder="Address"/>
+             {errors.address && touched.address ? (
+               <div>{errors.address}</div>
+             ) : null}
              
-             <Field name="dob" type="text" placeholder="Date of Birth (String Format)"/>
+             <Field name="dob" type="text" placeholder="Date of Birth (YYYY.MM.DD)"/>
+             {errors.dob && touched.dob ? (
+               <div>{errors.dob}</div>
+             ) : null}
              <Field name="image" type="text" placeholder="Image Link"/>
              <Dropdown
         overlay={
@@ -119,6 +132,9 @@ const Register = () => {
           {values.maritalStatus || 'Select Marital Status'} <DownOutlined />
         </Button>
       </Dropdown>
+      {errors.maritalStatus && touched.maritalStatus ? (
+    <div style={{ color: 'red', fontSize: '14px' }}>{errors.maritalStatus}</div>
+  ) : null}
              
                 <br/>
                 <br/>
@@ -131,6 +147,9 @@ const Register = () => {
                   <Radio value="Male">Male</Radio>
                   <Radio value="Female">Female</Radio>
                 </Radio.Group>
+                {errors.gender && touched.gender ? (
+    <div style={{ color: 'red', fontSize: '14px' }}>{errors.gender}</div>
+  ) : null}
                 
       <br/>
              <button type="submit">Add </button>
