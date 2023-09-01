@@ -62,6 +62,9 @@ useEffect(()=>{
   const handleDonation= () => {
     router.push('/donation')
   }
+  const handleDonationReport= () => {
+    router.push('/donation-report')
+  }
     return(
       <>
         <Header/>
@@ -88,6 +91,7 @@ useEffect(()=>{
         <div><br/> <br/> <button onClick={handleMember}>Add Member</button>
         <button onClick={viewMember}>View All Member</button>
         <button onClick={handleDonation}>Add Donation</button>
+        <button onClick={handleDonationReport}>Generate Donation Report</button>
         </div>
      
           </>
