@@ -3,9 +3,12 @@ const { Schema } = mongoose;
 
 const donationSchema = new Schema({
     donationAmount: Number,
-    donationDate: String,
+    donationDate: Date,
     user: String
-   });
+   },
+   {
+    timestamps: true // adding timestamp
+});
     
    const Donations = mongoose.model('Donation', donationSchema);
 
