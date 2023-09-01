@@ -12,7 +12,7 @@ HamroChuch is a comprehensive church management software designed to streamline 
  
 ### Features
   - [x] Dashboard
-  - [x] Event Planning
+  - [ ] Event Planning
   - [ ] Roles and Groups
   - [x] Donation Tracking and Report
 
