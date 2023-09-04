@@ -23,17 +23,16 @@ const eventSchema = new Schema({
         type: String,
         trim: true,
       },
-      organizer: {
+      assignedTo: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user', 
+        ref: 'user', // Reference to the 'User' model
       },
-      participants: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'member',
-        },
-      ],
-    });
+
+    },
+    {
+        timestamps: true, // Add timestamps to the schema
+    }
+    );
     
    const Events = mongoose.model('Event', eventSchema);
 

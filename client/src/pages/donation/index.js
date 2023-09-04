@@ -42,6 +42,7 @@ const Donation = () => {
     const data = await res.json()
     if(data) { 
         messageApi.info(data.msg)
+        window.location.reload();
     }else{
       messageApi.info(res.statusText);
     }
