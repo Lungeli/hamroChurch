@@ -24,8 +24,7 @@ const eventSchema = new Schema({
         trim: true,
       },
       assignedTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user', // Reference to the 'User' model
+        type: String,
       },
 
     },

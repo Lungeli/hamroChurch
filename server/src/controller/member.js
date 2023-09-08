@@ -65,6 +65,21 @@ const countFemale = async(req, res) => {
       }
 }
 
+const findMemberById = async (req, res) => {
+  try {
+    const memberId = req.params.id; 
+    const member = await Members.findById(memberId);
+
+    if (!member) {
+      return res.status(404).json({ message: 'Member not found' });
+    }
+
+    res.json(member);
+  } catch (error) {
+    console.error('Error finding member by ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 
-module.exports = {addNewMember, getAllMembers, countMale, countFemale}
+module.exports = {addNewMember, getAllMembers, countMale, countFemale, findMemberById}
