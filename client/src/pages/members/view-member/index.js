@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
-import { Table, Button, Space, Modal } from "antd";
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import Header from '../../../components/Header';
+import { Table, Button, Space, Modal, Input } from "antd";
+import { EditOutlined, DeleteOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons";
 
 const MembersPage = () => {
   const [members, setMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   useEffect(() => {
-    // Fetch data from your API endpoint
+   
     fetch("http://localhost:4000/member")
       .then((response) => response.json())
       .then((data) => {
-        setMembers(data.memberList);
+        // Add serial numbers to the member list
+        const membersWithSN = data.memberList.map((member, index) => ({
+          ...member,
+          sn: index + 1,
+        }));
+        setMembers(membersWithSN);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -34,7 +41,26 @@ const MembersPage = () => {
     setSelectedMember(null);
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value.toLowerCase()); // Convert search query to lowercase
+  };
+
+  // Filter the data based on the search query
+  const filteredMembers = members.filter((member) => {
+    const { fullName, email, address } = member;
+    return (
+      fullName.toLowerCase().includes(searchQuery) ||
+      email.toLowerCase().includes(searchQuery) ||
+      address.toLowerCase().includes(searchQuery)
+    );
+  });
+
   const columns = [
+    {
+      title: "S.N.",
+      dataIndex: "sn",
+      key: "sn",
+    },
     {
       title: "Full Name",
       dataIndex: "fullName",
@@ -81,11 +107,37 @@ const MembersPage = () => {
     },
   ];
 
+  const paginationConfig = {
+    showSizeChanger: true,
+    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} members`,
+  };
+
   return (
     <div>
+    <Header/>
       <h1>Members</h1>
-      <Table columns={columns} dataSource={members} />
-
+      <div style={{ display: "flex", marginBottom: 10, alignItems: "center" }}>
+        <Input
+          placeholder="Search members"
+          onChange={handleSearch}
+          value={searchQuery}
+          style={{ width: 150 }}
+        />
+        <Button
+          type="primary"
+          icon={<SearchOutlined />}
+          size="large"
+          onClick={() => handleSearch}
+          style={{ marginLeft: 10 }}
+        >
+          Search
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={filteredMembers}
+        pagination={paginationConfig}
+      />
       <Modal
         title="User Details"
         visible={selectedMember !== null}
@@ -101,7 +153,6 @@ const MembersPage = () => {
             <p><strong>Full Name:</strong> {selectedMember.fullName}</p>
             <p><strong>Email:</strong> {selectedMember.email}</p>
             <p><strong>Address:</strong> {selectedMember.address}</p>
-            {/* Add more fields as needed */}
             <p><strong>Phone Number:</strong> {selectedMember.phoneNumber}</p>
             <p><strong>Date of Birth:</strong> {selectedMember.dob}</p>
             <p><strong>Gender:</strong> {selectedMember.gender}</p>
