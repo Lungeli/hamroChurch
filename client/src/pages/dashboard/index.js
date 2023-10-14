@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { Button, Col, Row, Statistic } from 'antd';
 
-
+import { UserAddOutlined, UnorderedListOutlined, DollarCircleOutlined, FileTextOutlined, CalendarOutlined } from '@ant-design/icons';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { useSelector } from 'react-redux';
@@ -68,39 +68,65 @@ useEffect(()=>{
   const handleEvent= () => {
     router.push('/event')
   }
-    return(
-      <>
-        <Header/>
-        <div>Welcome To Dashboard {userDetails.fullName}</div>
-        <div style={{margin:'10px' ,backgroundColor:'lightgrey', padding:'5px', width:'200px'}}>
-        <Row gutter={16} >
-          <Col span={12}>
-      <Statistic title="Total Members" value={totalCount} />
-        </Col>
-        <Col span={12}>
-        <Statistic title="Total Donation" value={totalDonation} />
-        </Col>
-    
-      
-  
-        </Row>
-        </div>
-        <div>
-        <Progress type="circle" percent={maleCount} format={(percent) => `${percent} Male`} />
-        <Progress type="circle" percent={femaleCount} format={(percent) => `${percent} Female`} />
-        <Progress type="circle" percent={100} format={() =>  `${totalCount} Total Members`} />
-        </div>
+  return (
+    <>
+      <Header />
+      <div
+        style={{
+          margin: '10px',
+          backgroundColor: 'lightgrey',
+          padding: '15px',
+          borderRadius: '10px',
+          width: '100%',
+          textAlign: 'center',
+        }}
+      >
+        <h2>Welcome To Dashboard</h2>
+        <h3>{userDetails.fullName}</h3>
+      </div>
 
-        <div><br/> <br/> <button onClick={handleMember}>Add Member</button>
-        <button onClick={viewMember}>View All Member</button>
-        <button onClick={handleDonation}>Add Donation</button>
-        <button onClick={handleDonationReport}>Generate Donation Report</button>
-        <button onClick={handleEvent}>View Events</button>
-        </div>
-     
-          </>
-    
-    )
-  }
+      <Row gutter={16} style={{ margin: '20px' }}>
+      <Col span={12}>
+          <div style={{ padding: '10px' }}>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Statistic title="Total Members" value={totalCount} />
+              </Col>
+              <Col span={12}>
+                <Statistic title="Total Donation" value={totalDonation} />
+              </Col>
+            </Row>
+      
+            <Progress type="circle" percent={maleCount} format={(percent) => `${percent} Male`} />
+            <Progress type="circle" percent={femaleCount} format={(percent) => `${percent} Female`} />
+            <Progress type="circle" percent={100} format={() => `${totalCount} Total Members`} />
+          </div>
+        </Col>
+      </Row>
+
+      <Row gutter={16} style={{ margin: '20px' }}>
+        <Col span={12}>
+          <div style={{ padding: '10px' }}>
+            <Button type="primary" onClick={handleMember} style={{ margin: '5px' }}>
+              <UserAddOutlined /> Add Member
+            </Button>
+            <Button type="primary" onClick={viewMember} style={{ margin: '5px' }}>
+              <UnorderedListOutlined /> View All Members
+            </Button>
+            <Button type="primary" onClick={handleDonation} style={{ margin: '5px' }}>
+              <DollarCircleOutlined /> Add Donation
+            </Button>
+            <Button type="primary" onClick={handleDonationReport} style={{ margin: '5px' }}>
+              <FileTextOutlined /> Generate Donation Report
+            </Button>
+            <Button type="primary" onClick={handleEvent} style={{ margin: '5px' }}>
+              <CalendarOutlined /> View Events
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </>
+  );
+};
 
 export default Dashboard;
