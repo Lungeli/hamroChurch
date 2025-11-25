@@ -1,73 +1,137 @@
-import React from 'react'
-import { Formik, Form, Field } from 'formik';
+import React, { useState } from 'react';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import Link from 'next/link'
-import { Button, message, Space } from 'antd';
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { message } from 'antd';
 import { setUserDetails } from '@/redux/reducerSlice/users';
 import { useDispatch } from 'react-redux';
+import InputField from '@/components/InputField';
+import Button from '@/components/Button';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 const Login = () => {
-  const router = useRouter()
-  const [msg, contextHolder] = message.useMessage();   
-  const dispatch = useDispatch()
-  const handleLogin=async(values)=>{
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values)
+  const router = useRouter();
+  const [msg, contextHolder] = message.useMessage();
+  const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleLogin = async (values) => {
+    setIsSubmitting(true);
+    try {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(values)
+      };
+      const res = await fetch('http://localhost:4000/login', requestOptions);
+      const data = await res.json();
+      
+      if (data && data.success && res.status === 200) {
+        dispatch(setUserDetails(data));
+        msg.success(data.msg || 'Login successful!');
+        setTimeout(() => {
+          router.push('/dashboard');
+        }, 500);
+      } else {
+        msg.error(data.msg || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      msg.error('An error occurred. Please try again.');
+      console.error('Login error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
-  const res = await fetch('http://localhost:4000/login',requestOptions)
-  const data = await res.json()
-  if(data && data.success && res.status==200) { 
-    debugger
-    dispatch(setUserDetails(data))
-    router.push('/dashboard')
-    msg.info(data.msg);
-  }else{
-    msg.info(data.msg);
-  }
-}
-    const LoginSchema = Yup.object().shape({
-      phoneNumber: Yup.string().required('Required'),
-      password: Yup.string().required('Required')
-    });
-    return(
-        <>
-         {contextHolder}
-        <Header/>
-      <div className='container'> 
-      <div className="app--login">
-        <h2>Login</h2>
-        <Formik
-         initialValues={{
-            phoneNumber: '',
-           password:''
-         }}
-         validationSchema={LoginSchema}
-         onSubmit={values => {
-           // same shape as initial values
-         handleLogin(values)
-         }}
-       >
-         {({ errors, touched }) => (
-           <Form>
-            <Field name="phoneNumber"  placeholder="Phone Number"/>
-             {errors.phoneNumber && touched.phoneNumber ? <div>{errors.phoneNumber}</div> : null}
-             <Field name="password" type="password" placeholder="Password"/>
-             {errors.password && touched.password ? <div>{errors.password}</div> : null}
-             <button type="submit">Login</button>
-           </Form>
-         )}
-       </Formik>
-        <p>Don't have an account? <Link href="/register">Sign up</Link></p>
+
+  const LoginSchema = Yup.object().shape({
+    phoneNumber: Yup.string()
+      .required('Phone number is required')
+      .min(10, 'Phone number must be at least 10 digits'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(5, 'Password must be at least 5 characters')
+  });
+
+  return (
+    <>
+      {contextHolder}
+      <Header />
+      <div className="container" style={{ minHeight: 'calc(100vh - 200px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 0' }}>
+        <div className="form-container">
+          <div className="text-center mb-4">
+            <h1 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+              Welcome Back
+            </h1>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Sign in to your account to continue
+            </p>
+          </div>
+
+          <Formik
+            initialValues={{
+              phoneNumber: '',
+              password: ''
+            }}
+            validationSchema={LoginSchema}
+            onSubmit={handleLogin}
+          >
+            {({ values, errors, touched, handleChange, handleBlur }) => (
+              <Form>
+                <InputField
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  type="tel"
+                  label="Phone Number"
+                  placeholder="Enter your phone number"
+                  value={values.phoneNumber}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.phoneNumber && errors.phoneNumber}
+                  required
+                />
+
+                <InputField
+                  id="password"
+                  name="password"
+                  type="password"
+                  label="Password"
+                  placeholder="Enter your password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.password && errors.password}
+                  showPasswordToggle
+                  required
+                />
+
+                <Button
+                  type="submit"
+                  variant="primary"
+                  fullWidth
+                  disabled={isSubmitting}
+                  className="mt-3"
+                >
+                  {isSubmitting ? 'Signing in...' : 'Sign In'}
+                </Button>
+
+                <div className="text-center mt-4">
+                  <p style={{ color: 'var(--text-secondary)' }}>
+                    Don't have an account?{' '}
+                    <Link href="/register" style={{ color: 'var(--primary)', fontWeight: 600, textDecoration: 'none' }}>
+                      Sign up
+                    </Link>
+                  </p>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
-      </div>
-      <Footer/>
-      </>
-    )
-  }
+      <Footer />
+    </>
+  );
+};
 
 export default Login;

@@ -4,7 +4,17 @@ const { Schema } = mongoose;
 const donationSchema = new Schema({
     donationAmount: Number,
     donationDate: Date,
-    user: String
+    donationType: {
+        type: String,
+        enum: ['Tithe', 'General Offering', 'Special Offering'],
+        default: 'General Offering'
+    },
+    remarks: String,
+    user: String,
+    recordedDate: {
+        type: Date,
+        default: Date.now
+    }
    },
    {
     timestamps: true // adding timestamp

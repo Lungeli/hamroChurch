@@ -1,4 +1,5 @@
 {
     "MONGODB_DATABASE_NAME":"ChurchDB",
-    "MONGODB_CONNECTION_URI": "mongodb://127.0.0.1:27017"
+    "MONGODB_CONNECTION_URI": "mongodb+srv://lungeli:EekrsGBSkNk7VEBt@maindb.y864tqy.mongodb.net"
 }
+

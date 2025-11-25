@@ -1,14 +1,14 @@
 export default function Footer() {
-    const footStyle={
-        color: "white",
-      padding: "40px 0",
-      textAlign:"center",
-      margin: 0
-    }
   return (
-   <footer style={{backgroundColor:"#000"}}>
-    <p style={footStyle}>© 2023 Hamro Church App</p>
-   </footer>
-
-  )
+    <footer>
+      <div className="container">
+        <p style={{ margin: 0, fontSize: '1rem' }}>
+          © {new Date().getFullYear()} Hamro Church App. All rights reserved.
+        </p>
+        <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem', opacity: 0.8 }}>
+          Built with ❤️ for the church community
+        </p>
+      </div>
+    </footer>
+  );
 }

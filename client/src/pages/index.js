@@ -1,8 +1,11 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import Heroimg from '../../public/assets/mirchaiya.png';
+import Heroimg from '../../public/assets/mirchaiya.PNG';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 import { useSelector } from 'react-redux';
+import Button from '@/components/Button';
+import { ArrowRightOutlined } from '@ant-design/icons';
 
 export default function Index() {
   const { isLoggedIn, userDetails } = useSelector((state) => state.users);
@@ -17,14 +20,43 @@ export default function Index() {
 
   return (
     <>
+      <Header />
       <section className="hero" style={{ backgroundImage: `url(${Heroimg.src})` }}>
-        <div className="request--box">
-          <p></p>
-          <div className="btn">
-            <a href="/login">Get Started</a>
+        <div className="hero-content">
+          <h1 className="hero-title">Welcome to Hamro Church</h1>
+          <p className="hero-subtitle">
+            Your comprehensive church management solution. Manage members, track donations,
+            plan events, and build a stronger community together.
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Button
+              variant="primary"
+              onClick={() => router.push('/login')}
+              style={{
+                padding: '1rem 2rem',
+                fontSize: '1.125rem',
+                boxShadow: 'var(--shadow-xl)',
+              }}
+            >
+              Get Started
+              <ArrowRightOutlined style={{ marginLeft: '0.5rem' }} />
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => router.push('/register')}
+              style={{
+                padding: '1rem 2rem',
+                fontSize: '1.125rem',
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                color: 'white',
+              }}
+            >
+              Create Account
+            </Button>
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }
