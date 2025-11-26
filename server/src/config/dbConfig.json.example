@@ -1,0 +1,5 @@
+{
+    "MONGODB_DATABASE_NAME": "ChurchDB",
+    "MONGODB_CONNECTION_URI": "your-mongodb-connection-string-here"
+}
+

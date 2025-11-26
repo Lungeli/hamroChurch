@@ -45,3 +45,14 @@ jspm_packages
  
 #Excluding build directory
 
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+
+# Database configuration (contains sensitive data)
+server/src/config/dbConfig.json
+

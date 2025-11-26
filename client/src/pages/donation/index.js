@@ -7,11 +7,13 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import { message } from 'antd';
+import { useRouter } from 'next/router';
 import InputField from '@/components/InputField';
 import Button from '@/components/Button';
 import dayjs from 'dayjs';
 
 const Donation = () => {
+  const router = useRouter();
   const [donationDate, setDonationDate] = useState(null);
   const [messageApi, contextHolder] = message.useMessage();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,7 +60,7 @@ const Donation = () => {
       if (data) {
         messageApi.success(data.msg || 'Offering added successfully!');
         setTimeout(() => {
-          window.location.reload();
+          router.push('/dashboard');
         }, 1500);
       } else {
         messageApi.error('Failed to add donation');
@@ -90,6 +92,7 @@ const Donation = () => {
                 donationType: 'General Offering',
                 remarks: '',
                 user: userDetails?.fullName || 'Anonymous',
+                verifiedBy: '',
               }}
               validationSchema={donationSchema}
               onSubmit={(values) => {
@@ -189,6 +192,18 @@ const Donation = () => {
                       style={{ backgroundColor: 'var(--gray-100)', cursor: 'not-allowed' }}
                     />
                   </div>
+
+                  <InputField
+                    id="verifiedBy"
+                    name="verifiedBy"
+                    type="text"
+                    label="Verified By"
+                    placeholder="Enter name of person who counted the offerings"
+                    value={values.verifiedBy}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.verifiedBy && errors.verifiedBy}
+                  />
 
                   <Button
                     type="submit"

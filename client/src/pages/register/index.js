@@ -77,7 +77,7 @@ const Register = () => {
               Create Account
             </h1>
             <p style={{ color: 'var(--text-secondary)' }}>
-              Sign up to get started with Hamro Church
+              Sign up to get started with RTN FG Church
             </p>
           </div>
 

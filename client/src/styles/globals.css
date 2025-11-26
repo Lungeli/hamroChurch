@@ -1,12 +1,12 @@
 /* ============================================
-   MODERN DESIGN SYSTEM - HAMRO CHURCH
+   MODERN DESIGN SYSTEM - RTN FG CHURCH
    ============================================ */
 
 :root {
   /* Color Palette */
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #818cf8;
+  --primary: #87AE73;
+  --primary-dark: #6B8E5A;
+  --primary-light: #A5C494;
   --secondary: #8b5cf6;
   --accent: #ec4899;
   --success: #10b981;
@@ -93,8 +93,26 @@ body {
    HEADER & NAVIGATION
    ============================================ */
 
+/* Landing page background */
+.landing-page {
+  position: relative;
+}
+
+.landing-page header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: var(--spacing-md) 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* Default header (for other pages) */
 header {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
   padding: var(--spacing-md) 0;
   box-shadow: var(--shadow-md);
   position: sticky;
@@ -138,11 +156,18 @@ ul.nav-menus li a {
   display: inline-block;
 }
 
+.landing-page ul.nav-menus li a {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 ul.nav-menus li a:hover,
 ul.nav-menus li a.active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
   transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* ============================================
@@ -361,26 +386,13 @@ textarea.form-input {
    ============================================ */
 
 .hero {
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center center;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 200px);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
-  z-index: 1;
+  padding: 6rem var(--spacing-2xl) var(--spacing-2xl);
 }
 
 .hero-content {
@@ -389,7 +401,13 @@ textarea.form-input {
   text-align: center;
   color: var(--text-white);
   max-width: 800px;
-  padding: var(--spacing-2xl);
+  padding: var(--spacing-3xl);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
 .hero-title {
@@ -473,8 +491,21 @@ textarea.form-input {
    FOOTER
    ============================================ */
 
+/* Landing page footer */
+.landing-page footer {
+  background: rgba(27, 36, 51, 0.9);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-white);
+  padding: var(--spacing-2xl) 0;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* Default footer (for other pages) */
 footer {
-  background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+  background: #1B2433;
   color: var(--text-white);
   padding: var(--spacing-2xl) 0;
   text-align: center;

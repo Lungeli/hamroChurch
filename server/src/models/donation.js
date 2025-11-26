@@ -11,6 +11,10 @@ const donationSchema = new Schema({
     },
     remarks: String,
     user: String,
+    verifiedBy: {
+        type: String,
+        trim: true,
+    },
     recordedDate: {
         type: Date,
         default: Date.now

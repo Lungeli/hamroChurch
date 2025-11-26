@@ -46,7 +46,7 @@ const App = () => {
               status="success"
               text={
                 <span style={{ fontSize: '0.75rem' }}>
-                  {item.eventTitle}
+                  {item.eventTitle || 'Saturday Service'}
                 </span>
               }
             />
@@ -80,8 +80,8 @@ const App = () => {
         <div className="container">
           <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <h1 className="dashboard-title">Church Events</h1>
-              <p className="dashboard-subtitle">View and manage upcoming church events</p>
+              <h1 className="dashboard-title">Saturday Service Schedule</h1>
+              <p className="dashboard-subtitle">View and manage Saturday service schedules</p>
             </div>
             <Button
               type="primary"
@@ -94,51 +94,118 @@ const App = () => {
                 boxShadow: 'var(--shadow-lg)',
               }}
             >
-              Add New Event
+              Schedule Service
             </Button>
           </div>
 
           {events.length > 0 && (
             <Card style={{ marginBottom: '2rem', borderRadius: 'var(--radius-xl)' }}>
               <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 600 }}>
-                Upcoming Events
+                Upcoming Services & Events
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                {events.slice(0, 5).map((event) => (
-                  <div
-                    key={event._id}
-                    style={{
-                      padding: '1rem',
-                      background: 'var(--gray-50)',
-                      borderRadius: 'var(--radius-lg)',
-                      border: '1px solid var(--gray-200)',
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: '1rem' }}>
-                      <div style={{ flex: 1 }}>
-                        <h3 style={{ margin: 0, marginBottom: '0.5rem', fontSize: '1.125rem', fontWeight: 600 }}>
-                          {event.eventTitle}
-                        </h3>
-                        {event.eventDescription && (
-                          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-                            {event.eventDescription}
-                          </p>
-                        )}
-                        <div style={{ marginTop: '0.75rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                          <Tag color="blue">
-                            {dayjs(event.startDate).format('MMM DD, YYYY')}
-                          </Tag>
-                          {event.location && (
-                            <Tag color="green">{event.location}</Tag>
-                          )}
-                          {event.assignedTo && (
-                            <Tag color="purple">Assigned to: {event.assignedTo}</Tag>
-                          )}
+                {events
+                  .filter(event => {
+                    const eventDate = new Date(event.startDate);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return eventDate >= today;
+                  })
+                  .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                  .slice(0, 10)
+                  .map((event) => {
+                    if (event.type === 'service') {
+                      return (
+                        <div
+                          key={event._id}
+                          style={{
+                            padding: '1.5rem',
+                            background: 'var(--gray-50)',
+                            borderRadius: 'var(--radius-lg)',
+                            border: '1px solid var(--gray-200)',
+                          }}
+                        >
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div>
+                              <h3 style={{ margin: 0, marginBottom: '0.5rem', fontSize: '1.125rem', fontWeight: 600 }}>
+                                Saturday Service
+                              </h3>
+                              <Tag color="blue" style={{ marginBottom: '1rem' }}>
+                                {dayjs(event.startDate).format('dddd, MMMM DD, YYYY')}
+                              </Tag>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                              {event.serviceCoordinator && (
+                                <div>
+                                  <strong>Service Coordinator:</strong> {event.serviceCoordinator}
+                                </div>
+                              )}
+                              {event.choirLead && (
+                                <div>
+                                  <strong>Choir Lead:</strong> {event.choirLead}
+                                </div>
+                              )}
+                              {event.specialPrayers && (
+                                <div>
+                                  <strong>Special Prayers:</strong> {event.specialPrayers}
+                                </div>
+                              )}
+                              {event.sermonSpeaker && (
+                                <div>
+                                  <strong>Sermon / Speaker:</strong> {event.sermonSpeaker}
+                                </div>
+                              )}
+                              {event.offeringsCollectionTeam && (
+                                <div>
+                                  <strong>Offerings Collection Team:</strong> {event.offeringsCollectionTeam}
+                                </div>
+                              )}
+                              {event.offeringsCountingTeam && (
+                                <div>
+                                  <strong>Offerings Counting Team:</strong> {event.offeringsCountingTeam}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={event._id}
+                          style={{
+                            padding: '1.5rem',
+                            background: 'var(--gray-50)',
+                            borderRadius: 'var(--radius-lg)',
+                            border: '1px solid var(--gray-200)',
+                          }}
+                        >
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div>
+                              <h3 style={{ margin: 0, marginBottom: '0.5rem', fontSize: '1.125rem', fontWeight: 600 }}>
+                                {event.eventTitle}
+                              </h3>
+                              <Tag color="green" style={{ marginBottom: '1rem' }}>
+                                {dayjs(event.startDate).format('dddd, MMMM DD, YYYY')}
+                              </Tag>
+                            </div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                              {event.eventDescription && (
+                                <div style={{ marginBottom: '0.5rem' }}>
+                                  <strong>Description:</strong> {event.eventDescription}
+                                </div>
+                              )}
+                              {event.location && (
+                                <div>
+                                  <strong>Location:</strong> {event.location}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                  })}
               </div>
             </Card>
           )}
@@ -155,7 +222,7 @@ const App = () => {
           {!loading && events.length === 0 && (
             <Card style={{ borderRadius: 'var(--radius-xl)', textAlign: 'center', padding: '3rem' }}>
               <Empty
-                description="No events scheduled"
+                description="No services scheduled"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
             </Card>

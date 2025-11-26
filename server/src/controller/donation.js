@@ -162,7 +162,7 @@ const getTotalDonationAmount = async (req, res) => {
         };
       }
       
-      const donations = await Donations.find(query).sort({ donationDate: -1 });
+      const donations = await Donations.find(query).sort({ donationDate: 1 });
       const doc = new PDFDocument();
   
       // Setting PDF metadata (optional)
@@ -177,25 +177,64 @@ const getTotalDonationAmount = async (req, res) => {
       }
       doc.fontSize(12).text('Generated on: ' + new Date().toLocaleString(), { align: 'right' });
       doc.moveDown(); // Move cursor down
-      let totalDonation = 0;
-      // Loop through donations and add them to the report
-      donations.forEach((donation, index) => {
-        doc.fontSize(10).text(`Offering Date: ${donation.donationDate.toLocaleString()}`);
-        doc.fontSize(10).text(`Entered By: ${donation.user}`);
-        doc.fontSize(10).text(`Offering Type: ${donation.donationType || 'General Offering'}`);
-        doc.fontSize(10).text(`Offering Amount: Rs ${donation.donationAmount}`);
-        if (donation.remarks) {
-          doc.fontSize(10).text(`Remarks: ${donation.remarks}`);
+      
+      // Group donations by month
+      const donationsByMonth = {};
+      donations.forEach((donation) => {
+        const donationDate = new Date(donation.donationDate);
+        const monthKey = `${donationDate.getFullYear()}-${donationDate.getMonth()}`;
+        if (!donationsByMonth[monthKey]) {
+          donationsByMonth[monthKey] = {
+            month: donationDate.getMonth(),
+            year: donationDate.getFullYear(),
+            donations: [],
+            total: 0
+          };
         }
-        doc.fontSize(10).text(`Recorded Date: ${donation.recordedDate ? donation.recordedDate.toLocaleString() : donation.createdAt.toLocaleString()}`);
-        doc.fontSize(10).text(`Created At: ${donation.createdAt.toLocaleString()}`);
+        donationsByMonth[monthKey].donations.push(donation);
+        donationsByMonth[monthKey].total += donation.donationAmount;
+      });
+      
+      // Sort months chronologically
+      const sortedMonths = Object.keys(donationsByMonth).sort();
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                         'July', 'August', 'September', 'October', 'November', 'December'];
+      
+      let grandTotal = 0;
+      
+      // Loop through each month
+      sortedMonths.forEach((monthKey) => {
+        const monthData = donationsByMonth[monthKey];
+        const monthName = monthNames[monthData.month];
+        
+        // Month header
+        doc.fontSize(14).text(`${monthName} ${monthData.year}`, { underline: true });
+        doc.moveDown(0.5);
+        
+        // List donations for this month
+        monthData.donations.forEach((donation) => {
+          doc.fontSize(10).text(`Offering Date: ${donation.donationDate.toLocaleString()}`);
+          doc.fontSize(10).text(`Entered By: ${donation.user}`);
+          doc.fontSize(10).text(`Offering Type: ${donation.donationType || 'General Offering'}`);
+          doc.fontSize(10).text(`Offering Amount: Rs ${donation.donationAmount}`);
+          if (donation.remarks) {
+            doc.fontSize(10).text(`Remarks: ${donation.remarks}`);
+          }
+          if (donation.verifiedBy) {
+            doc.fontSize(10).text(`Verified By: ${donation.verifiedBy}`);
+          }
+          doc.fontSize(10).text(`Recorded Date: ${donation.recordedDate ? donation.recordedDate.toLocaleString() : donation.createdAt.toLocaleString()}`);
+          doc.moveDown(0.5);
+        });
+        
+        // Month total
+        doc.fontSize(11).text(`Total for ${monthName} ${monthData.year}: Rs ${monthData.total}`, { align: 'right' });
         doc.moveDown();
-        // Adding the donation amount to the total
-      totalDonation += donation.donationAmount;
+        grandTotal += monthData.total;
       });
   
       doc.moveDown();
-      doc.fontSize(12).text(`Total Offerings Amount: Rs ${totalDonation}`, { align: 'right' });
+      doc.fontSize(12).text(`Grand Total Offerings Amount: Rs ${grandTotal}`, { align: 'right', underline: true });
   
       // Setting the response content type to PDF
       res.setHeader('Content-Type', 'application/pdf');

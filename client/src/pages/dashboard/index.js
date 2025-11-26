@@ -132,7 +132,7 @@ const Dashboard = () => {
               status="success"
               text={
                 <span style={{ fontSize: '0.75rem' }}>
-                  {item.eventTitle}
+                  {item.eventTitle || 'Saturday Service'}
                 </span>
               }
             />
@@ -216,7 +216,7 @@ const Dashboard = () => {
     },
     {
       icon: <CalendarOutlined />,
-      label: 'Add Event',
+      label: 'Schedule Service',
       onClick: () => router.push('/add-event'),
       color: '#f59e0b'
     }
@@ -302,21 +302,18 @@ const Dashboard = () => {
                 <Card
                   style={{
                     borderRadius: 'var(--radius-lg)',
-                    background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                    background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)',
                     color: 'white',
                     border: 'none',
                     boxShadow: 'var(--shadow-lg)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <ClockCircleOutlined style={{ fontSize: '1.5rem' }} />
-                    <div>
-                      <div style={{ fontSize: '0.875rem', opacity: 0.9 }}>
-                        {currentDateTime.format('dddd, MMMM DD, YYYY')}
-                      </div>
-                      <div style={{ fontSize: '1.5rem', fontWeight: 600 }}>
-                        {currentDateTime.format('hh:mm:ss A')}
-                      </div>
+                  <div>
+                    <div style={{ fontSize: '0.875rem', opacity: 0.9 }}>
+                      {currentDateTime.format('dddd, MMMM DD, YYYY')}
+                    </div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 600 }}>
+                      {currentDateTime.format('hh:mm:ss A')}
                     </div>
                   </div>
                 </Card>
@@ -324,7 +321,7 @@ const Dashboard = () => {
             </div>
 
             <div className="stats-grid">
-              <div className="stat-card">
+              <div className="stat-card" style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)' }}>
                 <div className="stat-value">
                   <TeamOutlined style={{ fontSize: '2rem', marginRight: '0.5rem' }} />
                   {totalCount}
@@ -332,17 +329,15 @@ const Dashboard = () => {
                 <div className="stat-label">Total Members</div>
               </div>
 
-              <div className="stat-card" style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)' }}>
+              <div className="stat-card" style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)' }}>
                 <div className="stat-value">
-                  <DollarCircleOutlined style={{ fontSize: '2rem', marginRight: '0.5rem' }} />
                   Rs. {totalDonation.toLocaleString()}
                 </div>
                 <div className="stat-label">Total Offerings</div>
               </div>
 
-              <div className="stat-card" style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' }}>
+              <div className="stat-card" style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)' }}>
                 <div className="stat-value">
-                  <DollarCircleOutlined style={{ fontSize: '2rem', marginRight: '0.5rem' }} />
                   Rs. {currentMonthDonation.toLocaleString()}
                 </div>
                 <div className="stat-label">{dayjs().format('MMMM')} Collections</div>
@@ -442,7 +437,7 @@ const Dashboard = () => {
                       icon={<CalendarOutlined />}
                       onClick={() => router.push('/event')}
                       style={{
-                        background: 'linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%)',
+                        background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)',
                         border: 'none',
                       }}
                     >
@@ -482,49 +477,111 @@ const Dashboard = () => {
                   ) : events.length > 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '500px', overflowY: 'auto' }}>
                       {events
-                        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
-                        .slice(0, 5)
-                        .map((event) => (
-                          <div
-                            key={event._id}
-                            style={{
-                              padding: '1rem',
-                              background: 'var(--gray-50)',
-                              borderRadius: 'var(--radius-lg)',
-                              border: '1px solid var(--gray-200)',
-                              cursor: 'pointer',
-                              transition: 'all var(--transition-base)',
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.background = 'var(--gray-100)';
-                              e.currentTarget.style.transform = 'translateX(5px)';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.background = 'var(--gray-50)';
-                              e.currentTarget.style.transform = 'translateX(0)';
-                            }}
-                            onClick={() => router.push('/event')}
-                          >
-                            <h3 style={{ margin: 0, marginBottom: '0.5rem', fontSize: '1rem', fontWeight: 600 }}>
-                              {event.eventTitle}
-                            </h3>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                              <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                                {dayjs(event.startDate).format('dddd, MMMM DD, YYYY')}
-                              </div>
-                              {event.startDate && event.endDate && (
-                                <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                                  {dayjs(event.startDate).format('h:mm A')} - {dayjs(event.endDate).format('h:mm A')}
+                        .filter(event => {
+                          // Only show upcoming events (from today onwards)
+                          const eventDate = new Date(event.startDate);
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          return eventDate >= today;
+                        })
+                        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                        .slice(0, 10)
+                        .map((event) => {
+                          if (event.type === 'service') {
+                            // Saturday Service Schedule
+                            return (
+                              <div
+                                key={event._id}
+                                style={{
+                                  padding: '1rem',
+                                  background: 'var(--gray-50)',
+                                  borderRadius: 'var(--radius-lg)',
+                                  border: '1px solid var(--gray-200)',
+                                  cursor: 'pointer',
+                                  transition: 'all var(--transition-base)',
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = 'var(--gray-100)';
+                                  e.currentTarget.style.transform = 'translateX(5px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'var(--gray-50)';
+                                  e.currentTarget.style.transform = 'translateX(0)';
+                                }}
+                                onClick={() => router.push('/event')}
+                              >
+                                <h3 style={{ margin: 0, marginBottom: '0.75rem', fontSize: '1rem', fontWeight: 600 }}>
+                                  Saturday Service, {dayjs(event.startDate).format('MMMM DD, YYYY')}
+                                </h3>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                                  {event.serviceCoordinator && (
+                                    <div>
+                                      <strong>Service Coordinator:</strong> {event.serviceCoordinator}
+                                    </div>
+                                  )}
+                                  {event.choirLead && (
+                                    <div>
+                                      <strong>Choir Lead:</strong> {event.choirLead}
+                                    </div>
+                                  )}
+                                  {event.specialPrayers && (
+                                    <div>
+                                      <strong>Special Prayers:</strong> {event.specialPrayers}
+                                    </div>
+                                  )}
+                                  {event.sermonSpeaker && (
+                                    <div>
+                                      <strong>Sermon / Speaker:</strong> {event.sermonSpeaker}
+                                    </div>
+                                  )}
+                                  {event.offeringsCollectionTeam && (
+                                    <div>
+                                      <strong>Offerings Collection Team:</strong> {event.offeringsCollectionTeam}
+                                    </div>
+                                  )}
+                                  {event.offeringsCountingTeam && (
+                                    <div>
+                                      <strong>Offerings Counting Team:</strong> {event.offeringsCountingTeam}
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                              {event.location && (
-                                <Tag color="green" style={{ marginTop: '0.5rem', width: 'fit-content' }}>
-                                  {event.location}
-                                </Tag>
-                              )}
-                            </div>
-                          </div>
-                        ))}
+                              </div>
+                            );
+                          } else {
+                            // Regular Event
+                            return (
+                              <div
+                                key={event._id}
+                                style={{
+                                  padding: '1rem',
+                                  background: 'var(--gray-50)',
+                                  borderRadius: 'var(--radius-lg)',
+                                  border: '1px solid var(--gray-200)',
+                                  cursor: 'pointer',
+                                  transition: 'all var(--transition-base)',
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.background = 'var(--gray-100)';
+                                  e.currentTarget.style.transform = 'translateX(5px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.background = 'var(--gray-50)';
+                                  e.currentTarget.style.transform = 'translateX(0)';
+                                }}
+                                onClick={() => router.push('/event')}
+                              >
+                                <h3 style={{ margin: 0, marginBottom: '0.5rem', fontSize: '1rem', fontWeight: 600 }}>
+                                  {event.eventTitle} - {dayjs(event.startDate).format('dddd, MMMM DD, YYYY')}
+                                </h3>
+                                {event.eventDescription && (
+                                  <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                                    {event.eventDescription}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                        })}
                     </div>
                   ) : (
                     <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>

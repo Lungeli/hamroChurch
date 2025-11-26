@@ -19,11 +19,11 @@ export default function Index() {
   }, [isLoggedIn, router]);
 
   return (
-    <>
+    <div className="landing-page" style={{ backgroundImage: `url(${Heroimg.src})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: '100vh' }}>
       <Header />
-      <section className="hero" style={{ backgroundImage: `url(${Heroimg.src})` }}>
+      <section className="hero">
         <div className="hero-content">
-          <h1 className="hero-title">Welcome to Hamro Church</h1>
+          <h1 className="hero-title">Welcome to RTN FG Church</h1>
           <p className="hero-subtitle">
             Your comprehensive church management solution. Manage members, track donations,
             plan events, and build a stronger community together.
@@ -57,6 +57,6 @@ export default function Index() {
         </div>
       </section>
       <Footer />
-    </>
+    </div>
   );
 }

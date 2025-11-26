@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Logo from '../../public/hamroChurchLogo.png';
+import Logo from '../../public/rtnLogo.png';
 import { Avatar, Space, Popover } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
@@ -66,7 +66,7 @@ export default function Header() {
             <Link href="/">
               <Image
                 src={Logo}
-                alt="Hamro Church Logo"
+                alt="RTN FG Church Logo"
                 style={{ cursor: 'pointer' }}
                 priority
               />
