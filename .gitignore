@@ -52,7 +52,12 @@ jspm_packages
 .env.test.local
 .env.production.local
 .env.*
+!*.env.example
+server/.env
+**/.env
+!**/.env.example
 
 # Database configuration (contains sensitive data)
 server/src/config/dbConfig.json
+**/dbConfig.json
 
