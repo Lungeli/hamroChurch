@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
-import { Card, Spin, Alert, Button, Select, Space, Table, Tabs, Tag, Statistic, Row, Col } from 'antd';
+import { Card, Spin, Alert, Button, Select, Space, Table, Tabs, Tag, Statistic, Row, Col, DatePicker } from 'antd';
 import { FileTextOutlined, DownloadOutlined, FilterOutlined, TableOutlined, FilePdfOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 
-const { Option } = Select;
 const { TabPane } = Tabs;
 
 const DonationReport = () => {
@@ -14,34 +13,16 @@ const DonationReport = () => {
   const [loading, setLoading] = useState(true);
   const [tableLoading, setTableLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(null);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
   const [activeTab, setActiveTab] = useState('table');
 
-  // Generate month and year options
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
-  const months = [
-    { value: '1', label: 'January' },
-    { value: '2', label: 'February' },
-    { value: '3', label: 'March' },
-    { value: '4', label: 'April' },
-    { value: '5', label: 'May' },
-    { value: '6', label: 'June' },
-    { value: '7', label: 'July' },
-    { value: '8', label: 'August' },
-    { value: '9', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' },
-  ];
-
-  const fetchDonations = async (month = null, year = null) => {
+  const fetchDonations = async (from = null, to = null) => {
     try {
       setTableLoading(true);
       let url = 'http://localhost:4000/donations';
-      if (month && year) {
-        url += `?month=${month}&year=${year}`;
+      if (from && to) {
+        url += `?fromDate=${from}&toDate=${to}`;
       }
       
       const response = await fetch(url);
@@ -59,14 +40,14 @@ const DonationReport = () => {
     }
   };
 
-  const fetchPdfReport = async (month = null, year = null) => {
+  const fetchPdfReport = async (from = null, to = null) => {
     try {
       setLoading(true);
       setError(null);
       
       let url = 'http://localhost:4000/generate-donation-report';
-      if (month && year) {
-        url += `?month=${month}&year=${year}`;
+      if (from && to) {
+        url += `?fromDate=${from}&toDate=${to}`;
       }
       
       const response = await fetch(url);
@@ -93,9 +74,11 @@ const DonationReport = () => {
   };
 
   const handleFilterChange = () => {
-    if (selectedMonth && selectedYear) {
-      fetchDonations(selectedMonth, selectedYear);
-      fetchPdfReport(selectedMonth, selectedYear);
+    if (fromDate && toDate) {
+      const from = dayjs(fromDate).format('YYYY-MM-DD');
+      const to = dayjs(toDate).format('YYYY-MM-DD');
+      fetchDonations(from, to);
+      fetchPdfReport(from, to);
     } else {
       fetchDonations();
       fetchPdfReport();
@@ -103,8 +86,8 @@ const DonationReport = () => {
   };
 
   const handleClearFilter = () => {
-    setSelectedMonth(null);
-    setSelectedYear(new Date().getFullYear());
+    setFromDate(null);
+    setToDate(null);
     fetchDonations();
     fetchPdfReport();
   };
@@ -156,8 +139,8 @@ const DonationReport = () => {
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
     
-    const fileName = selectedMonth && selectedYear
-      ? `offerings-report-${months.find(m => m.value === selectedMonth)?.label}-${selectedYear}.csv`
+    const fileName = fromDate && toDate
+      ? `offerings-report-${dayjs(fromDate).format('YYYY-MM-DD')}-to-${dayjs(toDate).format('YYYY-MM-DD')}.csv`
       : `offerings-report-${new Date().toISOString().split('T')[0]}.csv`;
     link.setAttribute('download', fileName);
     link.style.visibility = 'hidden';
@@ -299,41 +282,30 @@ const DonationReport = () => {
             <Space size="large" wrap>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <FilterOutlined />
-                <span style={{ fontWeight: 600 }}>Filter by Month:</span>
+                <span style={{ fontWeight: 600 }}>Filter by Date Range:</span>
               </div>
-              <Select
-                placeholder="Select Month"
-                value={selectedMonth}
-                onChange={setSelectedMonth}
+              <DatePicker
+                placeholder="From Date"
+                value={fromDate ? dayjs(fromDate) : null}
+                onChange={(date) => setFromDate(date ? date.toDate() : null)}
+                format="YYYY-MM-DD"
                 style={{ width: 150 }}
-                allowClear
-              >
-                {months.map(month => (
-                  <Option key={month.value} value={month.value}>
-                    {month.label}
-                  </Option>
-                ))}
-              </Select>
-              <Select
-                placeholder="Select Year"
-                value={selectedYear}
-                onChange={setSelectedYear}
-                style={{ width: 120 }}
-              >
-                {years.map(year => (
-                  <Option key={year} value={year}>
-                    {year}
-                  </Option>
-                ))}
-              </Select>
+              />
+              <DatePicker
+                placeholder="To Date"
+                value={toDate ? dayjs(toDate) : null}
+                onChange={(date) => setToDate(date ? date.toDate() : null)}
+                format="YYYY-MM-DD"
+                style={{ width: 150 }}
+              />
               <Button
                 type="primary"
                 onClick={handleFilterChange}
-                disabled={!selectedMonth || !selectedYear}
+                disabled={!fromDate || !toDate}
               >
                 Apply Filter
               </Button>
-              {(selectedMonth || selectedYear !== new Date().getFullYear()) && (
+              {(fromDate || toDate) && (
                 <Button onClick={handleClearFilter}>
                   Clear Filter
                 </Button>
@@ -470,8 +442,8 @@ const DonationReport = () => {
                         onClick={() => {
                           const link = document.createElement('a');
                           link.href = pdfSrc;
-                          const fileName = selectedMonth && selectedYear
-                            ? `offerings-report-${months.find(m => m.value === selectedMonth)?.label}-${selectedYear}.pdf`
+                          const fileName = fromDate && toDate
+                            ? `offerings-report-${dayjs(fromDate).format('YYYY-MM-DD')}-to-${dayjs(toDate).format('YYYY-MM-DD')}.pdf`
                             : `offerings-report-${new Date().toISOString().split('T')[0]}.pdf`;
                           link.download = fileName;
                           document.body.appendChild(link);

@@ -5,6 +5,9 @@ const userRoute = require('./routes/user')
 const memberRoute = require('./routes/member')
 const donationRoute = require('./routes/donation')
 const eventRoute = require('./routes/event')
+const budgetRoute = require('./routes/budget')
+const expenseRoute = require('./routes/expense')
+const budgetSettingsRoute = require('./routes/budgetSettings')
 
 const connection = require('./db/connection')
 
@@ -13,9 +16,7 @@ const Member = require('./models/member')
 const Donations = require('./models/donation')
 const Events = require('./models/event')
 
-connection()
 const app = express()
-
 
 const cors = require('cors')
 const port = 4000
@@ -25,9 +26,22 @@ app.use("/",userRoute)
 app.use("/",memberRoute)
 app.use("/",donationRoute)
 app.use("/",eventRoute)
+app.use("/",budgetRoute)
+app.use("/",expenseRoute)
+app.use("/",budgetSettingsRoute)
  
 
- 
- app.listen(port, () => {
- console.log(`Example app listening on port ${port}`)
- })
+// Start server after database connection
+const startServer = async () => {
+  try {
+    await connection()
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`)
+    })
+  } catch (error) {
+    console.error('Failed to start server:', error)
+    process.exit(1)
+  }
+}
+
+startServer()

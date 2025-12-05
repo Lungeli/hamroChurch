@@ -10,7 +10,9 @@ import {
   TeamOutlined,
   ClockCircleOutlined,
   ManOutlined,
-  WomanOutlined
+  WomanOutlined,
+  PieChartOutlined,
+  PlusCircleOutlined
 } from '@ant-design/icons';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -197,15 +199,9 @@ const Dashboard = () => {
       color: '#8b5cf6'
     },
     {
-      icon: <DollarCircleOutlined />,
-      label: 'Add Offering',
-      onClick: () => router.push('/donation'),
-      color: '#10b981'
-    },
-    {
-      icon: <FileTextOutlined />,
-      label: 'Offerings Report',
-      onClick: () => router.push('/donation-report'),
+      icon: <CalendarOutlined />,
+      label: 'Schedule Service',
+      onClick: () => router.push('/add-event'),
       color: '#f59e0b'
     },
     {
@@ -215,9 +211,21 @@ const Dashboard = () => {
       color: '#ec4899'
     },
     {
-      icon: <CalendarOutlined />,
-      label: 'Schedule Service',
-      onClick: () => router.push('/add-event'),
+      icon: <DollarCircleOutlined />,
+      label: 'Add Offerings',
+      onClick: () => router.push('/donation'),
+      color: '#10b981'
+    },
+    {
+      icon: <PlusCircleOutlined />,
+      label: 'Add Expenses',
+      onClick: () => router.push('/add-expense'),
+      color: '#ff4d4f'
+    },
+    {
+      icon: <FileTextOutlined />,
+      label: 'Accounting',
+      onClick: () => router.push('/accounting'),
       color: '#f59e0b'
     }
   ];

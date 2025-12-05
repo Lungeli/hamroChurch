@@ -1,11 +1,11 @@
 import Image from 'next/image';
 import Logo from '../../public/rtnLogo.png';
-import { Avatar, Space, Popover } from 'antd';
+import { Avatar, Space, Popover, Button } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { handleLogOut } from '@/redux/reducerSlice/users';
 import { useRouter } from 'next/router';
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, LogoutOutlined, HomeOutlined } from '@ant-design/icons';
 
 export default function Header() {
   const router = useRouter();
@@ -73,7 +73,31 @@ export default function Header() {
             </Link>
           </div>
           {isLoggedIn ? (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Button
+                type="text"
+                icon={<HomeOutlined style={{ fontSize: '1.5rem', color: '#ffffff' }} />}
+                onClick={() => router.push('/dashboard')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '50%',
+                  transition: 'all var(--transition-base)',
+                  padding: 0,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+                title="Go to Dashboard"
+              />
               <Popover
                 placement="bottomRight"
                 title={

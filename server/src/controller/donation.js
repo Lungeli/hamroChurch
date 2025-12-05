@@ -47,10 +47,28 @@ const getTotalDonationAmount = async (req, res) => {
   const getDonations = async (req, res) => {
     try {
       let query = {};
-      const { month, year } = req.query;
+      const { month, year, fromDate, toDate } = req.query;
       
-      // Filter by month and year if provided
-      if (month && year) {
+      // Support date range filtering
+      if (fromDate && toDate) {
+        // Parse YYYY-MM-DD format - create dates in local timezone
+        const fromParts = fromDate.split('-');
+        const toParts = toDate.split('-');
+        
+        // Create start date at beginning of day
+        const startDate = new Date(parseInt(fromParts[0]), parseInt(fromParts[1]) - 1, parseInt(fromParts[2]), 0, 0, 0, 0);
+        // Create end date at end of day
+        const endDate = new Date(parseInt(toParts[0]), parseInt(toParts[1]) - 1, parseInt(toParts[2]), 23, 59, 59, 999);
+        
+        console.log('Donation Query - fromDate:', fromDate, 'toDate:', toDate);
+        console.log('Parsed startDate:', startDate.toISOString(), 'endDate:', endDate.toISOString());
+        
+        query.donationDate = {
+          $gte: startDate,
+          $lte: endDate
+        };
+      } else if (month && year) {
+        // Fallback to month/year for backward compatibility
         const startDate = new Date(parseInt(year), parseInt(month) - 1, 1);
         const endDate = new Date(parseInt(year), parseInt(month), 0, 23, 59, 59, 999);
         query.donationDate = {
@@ -150,10 +168,19 @@ const getTotalDonationAmount = async (req, res) => {
   const  generateReport = async (req, res) => {
     try {
       let query = {};
-      const { month, year } = req.query;
+      const { month, year, fromDate, toDate } = req.query;
       
-      // Filter by month and year if provided
-      if (month && year) {
+      // Support date range filtering
+      if (fromDate && toDate) {
+        const startDate = new Date(fromDate);
+        const endDate = new Date(toDate);
+        endDate.setHours(23, 59, 59, 999);
+        query.donationDate = {
+          $gte: startDate,
+          $lte: endDate
+        };
+      } else if (month && year) {
+        // Fallback to month/year for backward compatibility
         const startDate = new Date(parseInt(year), parseInt(month) - 1, 1);
         const endDate = new Date(parseInt(year), parseInt(month), 0, 23, 59, 59, 999);
         query.donationDate = {
@@ -170,7 +197,11 @@ const getTotalDonationAmount = async (req, res) => {
 
       // Adding content to the PDF (customize this part based on your report format)
       doc.fontSize(16).text('Offerings Collection Report', { align: 'center' });
-      if (month && year) {
+      if (fromDate && toDate) {
+        const startDate = new Date(fromDate);
+        const endDate = new Date(toDate);
+        doc.fontSize(12).text(`Period: ${startDate.toLocaleDateString()} to ${endDate.toLocaleDateString()}`, { align: 'center' });
+      } else if (month && year) {
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
                            'July', 'August', 'September', 'October', 'November', 'December'];
         doc.fontSize(12).text(`Period: ${monthNames[parseInt(month) - 1]} ${year}`, { align: 'center' });
