@@ -1,6 +1,9 @@
 const express = require('express')
 require('dotenv').config()
 
+const dns = require('node:dns/promises');
+dns.setServers(['1.1.1.1', '8.8.8.8']);
+
 const userRoute = require('./routes/user')
 const memberRoute = require('./routes/member')
 const donationRoute = require('./routes/donation')
@@ -19,17 +22,17 @@ const Events = require('./models/event')
 const app = express()
 
 const cors = require('cors')
-const port = 4000
+const port = Number(process.env.PORT) || 4000
 app.use(express.json())
 app.use(cors())
-app.use("/",userRoute)
-app.use("/",memberRoute)
-app.use("/",donationRoute)
-app.use("/",eventRoute)
-app.use("/",budgetRoute)
-app.use("/",expenseRoute)
-app.use("/",budgetSettingsRoute)
- 
+app.use("/", userRoute)
+app.use("/", memberRoute)
+app.use("/", donationRoute)
+app.use("/", eventRoute)
+app.use("/", budgetRoute)
+app.use("/", expenseRoute)
+app.use("/", budgetSettingsRoute)
+
 
 // Start server after database connection
 const startServer = async () => {
